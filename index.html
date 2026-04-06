@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Registration</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102,126,234,0.5);
+    }
+
+    button {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 95%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Register for Event</h2>
+
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="text" id="event" placeholder="Event Name">
+    <input type="email" id="email" placeholder="Email">
+
+    <button onclick="saveData()">Register</button>
+
+    <p id="msg"></p>
+  </div>
+
+  <!-- Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQNKKgRJ0BG4zQzutPK1Z8ee4GyFsN-uk",
+      authDomain: "captsone-project-1.firebaseapp.com",
+      projectId: "captsone-project-1",
+      storageBucket: "captsone-project-1.firebasestorage.app",
+      messagingSenderId: "856057304235",
+      appId: "1:856057304235:web:63a3e7496da132451853ee",
+      measurementId: "G-DYFR6XYBLJ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function saveData() {
+      let name = document.getElementById("name").value;
+      let event = document.getElementById("event").value;
+      let email = document.getElementById("email").value;
+
+      if (name === "" || event === "" || email === "") {
+        document.getElementById("msg").innerText = "Please fill all fields!";
+        document.getElementById("msg").style.color = "red";
+        return;
+      }
+
+      db.collection("students").add({
+        name: name,
+        event: event,
+        email: email
+      })
+      .then(() => {
+        document.getElementById("msg").innerText = "Registration Successful!";
+        document.getElementById("msg").style.color = "green";
+
+        document.getElementById("name").value = "";
+        document.getElementById("event").value = "";
+        document.getElementById("email").value = "";
+      })
+      .catch((error) => {
+        document.getElementById("msg").innerText = "Error: " + error;
+        document.getElementById("msg").style.color = "red";
+      });
+    }
+  </script>
+
+</body>
+</html>
